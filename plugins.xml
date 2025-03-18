@@ -1,5 +1,5 @@
 <library path="remap_plugin_faces">
-  <class name="PluginFaces" type="remap::plugins::Pluginfaces" base_class_type="remap::plugins::PluginBase">
+  <class name="PluginFaces" type="remap::plugins::PluginFaces" base_class_type="remap::plugins::PluginBase">
     <description>A plugin for mapping detected faces into ReMap.</description>
   </class>
 </library>

@@ -15,6 +15,9 @@
 #ifndef REMAP_PLUGIN_FACES__PLUGIN_FACES_HPP_
 #define REMAP_PLUGIN_FACES__PLUGIN_FACES_HPP_
 
+#include <tf2_ros/buffer.h>
+#include <tf2_ros/transform_listener.h>
+
 #include <memory>
 #include <mutex>
 #include <string>
@@ -42,6 +45,15 @@ private:
 
   std::vector<std::string> old_faces_;
   std::vector<std::string> old_gazes_;
+
+  std::shared_ptr<tf2_ros::Buffer> tf_buffer_;
+  std::shared_ptr<tf2_ros::TransformListener> tf_listener_;
+
+  std::string robot_gaze_frame_;
+
+  void representGaze(
+    const geometry_msgs::msg::TransformStamped & gaze_transform,
+    const std::string & gaze_id);
 
 public:
   PluginFaces();

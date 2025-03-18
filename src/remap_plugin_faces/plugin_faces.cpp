@@ -37,15 +37,55 @@ PluginFaces::~PluginFaces()
   regions_register_.reset();
 }
 
+void PluginFaces::representGaze(
+  const geometry_msgs::msg::TransformStamped & gaze_transform,
+  const std::string & gaze_id)
+{
+  auto gaze_translation = gaze_transform.transform.translation;
+  auto gaze_rotation = gaze_transform.transform.rotation;
+  std::cout << gaze_transform.header.frame_id << std::endl;
+
+  tf2::Quaternion q_A_to_B(
+    gaze_rotation.x,
+    gaze_rotation.y,
+    gaze_rotation.z,
+    gaze_rotation.w);
+  q_A_to_B.normalize();
+
+  tf2::Vector3 axis_in_B(0.0, 0.0, 1.0);
+  auto axis_in_A = tf2::quatRotate(q_A_to_B, axis_in_B);
+
+  openvdb::Vec3d gaze_direction(
+    axis_in_A.getX(),
+    axis_in_A.getY(),
+    axis_in_A.getZ());
+  openvdb::Vec3d gaze_origin(
+    gaze_translation.x,
+    gaze_translation.y,
+    gaze_translation.z);
+  semantic_map_->insertSemanticCone(
+    0.7,
+    2.0,
+    gaze_direction,
+    std::string("gaze_") + gaze_id,
+    *regions_register_,
+    gaze_origin);
+}
+
 void PluginFaces::initialize()
 {
   RCLCPP_INFO(node_ptr_->get_logger(), "PluginFaces initializing");
+
+  tf_buffer_ = std::make_shared<tf2_ros::Buffer>(node_ptr_->get_clock());
+  tf_listener_ = std::make_shared<tf2_ros::TransformListener>(*tf_buffer_);
 
   hri_executor_ = rclcpp::executors::MultiThreadedExecutor::make_shared();
   hri_node_ = rclcpp::Node::make_shared("hri_node_hri_humans");
   hri_executor_->add_node(hri_node_);
   hri_listener_ = hri::HRIListener::create(hri_node_);
   hri_listener_->setReferenceFrame("map");  // TODO(lorenzoferrini) use the map handler fixed frame
+
+  robot_gaze_frame_ = "head_front_camera_color_optical_frame";
 }
 
 void PluginFaces::run()
@@ -61,6 +101,7 @@ void PluginFaces::run()
   for (const auto & old_gaze : old_gazes_) {
     semantic_map_->removeRegion(old_gaze, *regions_register_);
   }
+  semantic_map_->removeRegion("gaze_robot", *regions_register_);
 
   for (const auto & face : faces) {
     if (face.second->valid()) {
@@ -80,39 +121,22 @@ void PluginFaces::run()
           "Face transform for face %s is not valid", face.first.c_str());
       }
       if (gaze_transform) {
-        auto gaze_translation = gaze_transform->transform.translation;
-        auto gaze_rotation = gaze_transform->transform.rotation;
-        std::cout << gaze_transform->header.frame_id << std::endl;
-
-        tf2::Quaternion q_A_to_B(
-          gaze_rotation.x,
-          gaze_rotation.y,
-          gaze_rotation.z,
-          gaze_rotation.w);
-        q_A_to_B.normalize();
-
-        tf2::Vector3 axis_in_B(0.0, 0.0, 1.0);
-        auto axis_in_A = tf2::quatRotate(q_A_to_B, axis_in_B);
-
-        openvdb::Vec3d gaze_direction(
-          axis_in_A.getX(),
-          axis_in_A.getY(),
-          axis_in_A.getZ());
-        openvdb::Vec3d gaze_origin(
-          gaze_translation.x,
-          gaze_translation.y,
-          gaze_translation.z);
-        semantic_map_->insertSemanticCone(
-          0.7,
-          2.0,
-          gaze_direction,
-          std::string("gaze_") + face.first,
-          *regions_register_,
-          gaze_origin);
-
+        representGaze(*gaze_transform, face.first);
         old_gazes_.push_back(std::string("gaze_") + face.first);
       }
     }
+  }
+
+  // we also represent the FoV of the robot
+  geometry_msgs::msg::TransformStamped robot_gaze_transform_stamped;
+  try {
+    robot_gaze_transform_stamped = tf_buffer_->lookupTransform(
+      "map", robot_gaze_frame_, tf2::TimePointZero);
+    representGaze(robot_gaze_transform_stamped, "robot");
+  } catch (tf2::TransformException & ex) {
+    RCLCPP_ERROR(
+      node_ptr_->get_logger(), "Could not transform: %s", ex.what());
+    return;
   }
 }
 }  // namespace plugins
