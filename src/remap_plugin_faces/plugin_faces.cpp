@@ -80,7 +80,7 @@ void PluginFaces::initialize()
   tf_listener_ = std::make_shared<tf2_ros::TransformListener>(*tf_buffer_);
 
   hri_executor_ = rclcpp::executors::MultiThreadedExecutor::make_shared();
-  hri_node_ = rclcpp::Node::make_shared("hri_node_hri_humans");
+  hri_node_ = rclcpp::Node::make_shared("hri_node_remap_plugin_faces");
   hri_executor_->add_node(hri_node_);
   hri_listener_ = hri::HRIListener::create(hri_node_);
   hri_listener_->setReferenceFrame("map");  // TODO(lorenzoferrini) use the map handler fixed frame
