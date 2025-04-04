@@ -84,8 +84,6 @@ void PluginFaces::initialize()
   hri_executor_->add_node(hri_node_);
   hri_listener_ = hri::HRIListener::create(hri_node_);
   hri_listener_->setReferenceFrame("map");  // TODO(lorenzoferrini) use the map handler fixed frame
-
-  robot_gaze_frame_ = "head_front_camera_color_optical_frame";
 }
 
 void PluginFaces::run()
@@ -101,7 +99,6 @@ void PluginFaces::run()
   for (const auto & old_gaze : old_gazes_) {
     semantic_map_->removeRegion(old_gaze, *regions_register_);
   }
-  semantic_map_->removeRegion("gaze_robot", *regions_register_);
 
   for (const auto & face : faces) {
     if (face.second->valid()) {
@@ -126,17 +123,58 @@ void PluginFaces::run()
       }
     }
   }
+}
 
-  // we also represent the FoV of the robot
-  geometry_msgs::msg::TransformStamped robot_gaze_transform_stamped;
-  try {
-    robot_gaze_transform_stamped = tf_buffer_->lookupTransform(
-      "map", robot_gaze_frame_, tf2::TimePointZero);
-    representGaze(robot_gaze_transform_stamped, "robot");
-  } catch (tf2::TransformException & ex) {
-    RCLCPP_ERROR(
-      node_ptr_->get_logger(), "Could not transform: %s", ex.what());
-    return;
+void PluginFaces::storeEntitiesRelationships(
+  std::map<std::string, std::map<std::string, std::string>> relationships_matrix)
+{
+  (void) relationships_matrix;
+
+  std::vector<std::string> new_facts;
+  std::vector<std::string> old_facts;
+
+  std::vector<std::string> & gazes = old_gazes_;  // alias, for clarity
+
+  for (const auto & gaze : gazes) {
+    auto in_fov_entities = regions_register_->getCoexistentEntities(gaze);
+
+    if (in_fov_entities_.find(gaze) != in_fov_entities_.end()) {
+      // we iterate over the objects in the field of view of this specific gaze
+      for (const auto & object : in_fov_entities_[gaze]) {
+        if (std::find(
+            in_fov_entities.begin(), in_fov_entities.end(),
+            object) == in_fov_entities.end())
+        {
+          // the object is not in the field of view anymore
+          old_facts.push_back(object + " isInFoV " + gaze);
+        }
+      }
+      // we iterate over the objects that are in the field of view
+      // to see which one have just been detected
+      for (const auto & object : in_fov_entities) {
+        if (std::find(
+            in_fov_entities_[gaze].begin(),
+            in_fov_entities_[gaze].end(),
+            object) == in_fov_entities_[gaze].end())
+        {
+          // the object is new
+          new_facts.push_back(object + " isInFoV " + gaze);
+        }
+      }
+    } else {
+      // this gaze is new, so we add all the objects in the field of view
+      for (const auto & object : in_fov_entities) {
+        new_facts.push_back(object + " isInFoV " + gaze);
+      }
+      in_fov_entities_[gaze] = in_fov_entities;
+    }
+  }
+
+  if (new_facts.size() > 0) {
+    this->revisePushFacts(new_facts);
+  }
+  if (old_facts.size() > 0) {
+    this->reviseRemoveFacts(old_facts);
   }
 }
 }  // namespace plugins

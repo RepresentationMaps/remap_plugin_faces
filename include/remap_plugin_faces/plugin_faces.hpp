@@ -18,9 +18,11 @@
 #include <tf2_ros/buffer.h>
 #include <tf2_ros/transform_listener.h>
 
+#include <map>
 #include <memory>
 #include <mutex>
 #include <string>
+#include <unordered_set>
 #include <vector>
 
 #include <rclcpp/rclcpp.hpp>
@@ -51,6 +53,8 @@ private:
 
   std::string robot_gaze_frame_;
 
+  std::map<std::string, std::unordered_set<std::string>> in_fov_entities_;
+
   void representGaze(
     const geometry_msgs::msg::TransformStamped & gaze_transform,
     const std::string & gaze_id);
@@ -63,6 +67,8 @@ public:
   ~PluginFaces();
   void run() override;
   void initialize() override;
+  void storeEntitiesRelationships(
+    std::map<std::string, std::map<std::string, std::string>> relationships_matrix) override;
 };
 }    // namespace plugins
 }  // namespace remap
