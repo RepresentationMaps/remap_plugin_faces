@@ -2,8 +2,8 @@
 Changelog for package remap_plugin_faces
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.2.0 (2025-04-07)
+------------------
 * removed robot + facts + pleasing linters
 * renaming hri listener node
 * supporting robot fov
