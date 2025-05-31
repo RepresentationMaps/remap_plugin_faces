@@ -43,7 +43,6 @@ void PluginFaces::representGaze(
 {
   auto gaze_translation = gaze_transform.transform.translation;
   auto gaze_rotation = gaze_transform.transform.rotation;
-  std::cout << gaze_transform.header.frame_id << std::endl;
 
   tf2::Quaternion q_A_to_B(
     gaze_rotation.x,
@@ -166,8 +165,8 @@ void PluginFaces::storeEntitiesRelationships(
       for (const auto & object : in_fov_entities) {
         new_facts.push_back(object + " isInFoV " + gaze);
       }
-      in_fov_entities_[gaze] = in_fov_entities;
     }
+    in_fov_entities_[gaze] = in_fov_entities;
   }
 
   if (new_facts.size() > 0) {
