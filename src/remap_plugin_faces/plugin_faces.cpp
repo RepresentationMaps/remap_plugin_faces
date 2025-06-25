@@ -82,7 +82,7 @@ void PluginFaces::initialize()
   hri_node_ = rclcpp::Node::make_shared("hri_node_remap_plugin_faces");
   hri_executor_->add_node(hri_node_);
   hri_listener_ = hri::HRIListener::create(hri_node_);
-  hri_listener_->setReferenceFrame("map");  // TODO(lorenzoferrini) use the map handler fixed frame
+  hri_listener_->setReferenceFrame(semantic_map_->getFixedFrame());
 }
 
 void PluginFaces::run()
