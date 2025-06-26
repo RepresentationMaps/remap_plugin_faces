@@ -2,8 +2,8 @@
 Changelog for package remap_plugin_faces
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.4.0 (2025-06-26)
+------------------
 * using spin all to process all tf transforms
 * Contributors: lorenzoferrini
 
