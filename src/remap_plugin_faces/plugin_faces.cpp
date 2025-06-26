@@ -75,9 +75,6 @@ void PluginFaces::initialize()
 {
   RCLCPP_INFO(node_ptr_->get_logger(), "PluginFaces initializing");
 
-  tf_buffer_ = std::make_shared<tf2_ros::Buffer>(node_ptr_->get_clock());
-  tf_listener_ = std::make_shared<tf2_ros::TransformListener>(*tf_buffer_);
-
   hri_executor_ = rclcpp::executors::MultiThreadedExecutor::make_shared();
   hri_node_ = rclcpp::Node::make_shared("hri_node_remap_plugin_faces");
   hri_executor_->add_node(hri_node_);
