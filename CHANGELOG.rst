@@ -2,6 +2,13 @@
 Changelog for package remap_plugin_faces
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* removed unused tf listener
+* using correct reference frame for HRIListener
+* fix bug always removing gazes
+* Contributors: Lorenzo Ferrini
+
 0.2.0 (2025-04-07)
 ------------------
 * removed robot + facts + pleasing linters
