@@ -2,6 +2,11 @@
 Changelog for package remap_plugin_faces
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* using spin all to process all tf transforms
+* Contributors: lorenzoferrini
+
 0.3.0 (2025-06-26)
 ------------------
 * removed unused tf listener
