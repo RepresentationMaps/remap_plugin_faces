@@ -2,8 +2,8 @@
 Changelog for package remap_plugin_faces
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.3.0 (2025-06-26)
+------------------
 * removed unused tf listener
 * using correct reference frame for HRIListener
 * fix bug always removing gazes
