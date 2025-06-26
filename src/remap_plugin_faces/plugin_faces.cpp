@@ -84,7 +84,7 @@ void PluginFaces::initialize()
 
 void PluginFaces::run()
 {
-  hri_executor_->spin_some();
+  hri_executor_->spin_all(std::chrono::milliseconds(50));
 
   std::vector<std::string> ids;
   auto faces = hri_listener_->getFaces();
