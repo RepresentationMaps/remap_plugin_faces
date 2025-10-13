@@ -2,6 +2,11 @@
 Changelog for package remap_plugin_faces
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Fix ament_auto warning about headers install destination
+* Contributors: Noel Jimenez
+
 0.4.0 (2025-06-26)
 ------------------
 * using spin all to process all tf transforms
