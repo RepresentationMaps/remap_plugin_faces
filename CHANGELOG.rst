@@ -2,6 +2,11 @@
 Changelog for package remap_plugin_faces
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* compat lyrical
+* Contributors: Séverin Lemaignan
+
 0.4.1 (2025-10-13)
 ------------------
 * Fix ament_auto warning about headers install destination
