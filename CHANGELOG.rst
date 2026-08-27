@@ -2,8 +2,8 @@
 Changelog for package remap_plugin_faces
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.4.2 (2026-08-27)
+------------------
 * compat lyrical
 * Contributors: Séverin Lemaignan
 
