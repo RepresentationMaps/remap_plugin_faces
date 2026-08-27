@@ -15,8 +15,8 @@
 #ifndef REMAP_PLUGIN_FACES__PLUGIN_FACES_HPP_
 #define REMAP_PLUGIN_FACES__PLUGIN_FACES_HPP_
 
-#include <tf2_ros/buffer.h>
-#include <tf2_ros/transform_listener.h>
+#include <tf2_ros/buffer.hpp>
+#include <tf2_ros/transform_listener.hpp>
 
 #include <map>
 #include <memory>

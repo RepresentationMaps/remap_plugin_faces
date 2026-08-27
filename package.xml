@@ -11,15 +11,24 @@
   <author email="lorenzo.ferrini@pal-robotics.com">Lorenzo Ferrini</author>
 
   <buildtool_depend>ament_cmake_auto</buildtool_depend>
-  
-  <depend>hri</depend>
-  <depend>pluginlib</depend>
-  <depend>rclcpp</depend>
-  <depend>remap_map_handler</depend>
-  <depend>remap_plugin_base</depend>
-  <depend>remap_regions_register</depend>
-  <depend>tf2</depend>
-  <depend>tf2_ros</depend>
+
+  <build_depend>hri</build_depend>
+  <build_depend>pluginlib</build_depend>
+  <build_depend>rclcpp</build_depend>
+  <build_depend>remap_map_handler</build_depend>
+  <build_depend>remap_plugin_base</build_depend>
+  <build_depend>remap_regions_register</build_depend>
+  <build_depend>tf2</build_depend>
+  <build_depend>tf2_ros</build_depend>
+
+  <exec_depend>hri</exec_depend>
+  <exec_depend>pluginlib</exec_depend>
+  <exec_depend>rclcpp</exec_depend>
+  <exec_depend>remap_map_handler</exec_depend>
+  <exec_depend>remap_plugin_base</exec_depend>
+  <exec_depend>remap_regions_register</exec_depend>
+  <exec_depend>tf2</exec_depend>
+  <exec_depend>tf2_ros</exec_depend>
 
   <test_depend>ament_cmake_gmock</test_depend>
   <test_depend>ament_lint_auto</test_depend>

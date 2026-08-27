@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <tf2/LinearMath/Quaternion.h>
-#include <tf2/LinearMath/Matrix3x3.h>
+#include <tf2/LinearMath/Quaternion.hpp>
+#include <tf2/LinearMath/Matrix3x3.hpp>
 
 #include <cmath>
 
